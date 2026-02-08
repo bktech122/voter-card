@@ -11,40 +11,42 @@
 </head>
 <body>
 
-  <div class="header">
-    <img src="assets/banner.jpg" alt="Banner">
-  </div>
+<!-- ===== FULL WIDTH BANNER ===== -->
+<div class="header">
+  <img src="assets/banner.jpg" alt="Banner">
+</div>
 
-  <div class="container">
-    <input value="জেলা: ঝিনাইদহ" disabled>
-    <input value="উপজেলা: কালীগঞ্জ" disabled>
+<!-- ===== SEARCH AREA (IMMEDIATELY UNDER BANNER) ===== -->
+<div class="container">
 
-    <select id="union">
-      <option value="">ইউনিয়ন নির্বাচন করুন</option>
-      <option>সুন্দরপুর-দূর্গাপুর</option>
-      <option>জামাল</option>
-      <option>কোলা</option>
-      <option>নিয়ামতপুর</option>
-      <option>শিমলা-রোকনপুর</option>
-      <option>ত্রিলোচনপুর</option>
-      <option>রায়গ্রাম</option>
-      <option>মালিয়াট</option>
-      <option>বারবাজার</option>
-      <option>কাষ্টভাঙ্গা</option>
-    </select>
+  <input value="জেলা: ঝিনাইদহ" disabled>
+  <input value="উপজেলা: কালীগঞ্জ" disabled>
 
-    <select id="village" disabled>
-      <option value="">গ্রাম নির্বাচন করুন</option>
-    </select>
+  <select id="union">
+    <option value="">ইউনিয়ন নির্বাচন করুন</option>
+    <option>সুন্দরপুর-দূর্গাপুর</option>
+    <option>জামাল</option>
+    <option>কোলা</option>
+    <option>নিয়ামতপুর</option>
+    <option>শিমলা-রোকনপুর</option>
+    <option>ত্রিলোচনপুর</option>
+    <option>রায়গ্রাম</option>
+    <option>মালিয়াট</option>
+    <option>বারবাজার</option>
+    <option>কাষ্টভাঙ্গা</option>
+  </select>
 
-    <input id="search" placeholder="নাম বা ভোটার আইডি লিখুন">
+  <select id="village" disabled>
+    <option value="">গ্রাম নির্বাচন করুন</option>
+  </select>
 
-    <button id="searchBtn">সার্চ করুন</button>
+  <input id="search" placeholder="নাম বা ভোটার আইডি লিখুন">
 
-    <div id="results"></div>
-  </div>
+  <button id="searchBtn">সার্চ করুন</button>
 
-  <div class="footer"></div>
+  <div id="results"></div>
+
+</div>
 
 <script>
 const u = document.getElementById('union');
@@ -68,9 +70,9 @@ u.onchange = () => {
   }
 };
 
-v.onchange = draw;
-s.oninput = draw;
 btn.onclick = draw;
+s.oninput = draw;
+v.onchange = draw;
 
 function draw() {
   r.innerHTML = '';
@@ -82,7 +84,12 @@ function draw() {
   }).forEach(x => {
     const d = document.createElement('div');
     d.className = 'result';
-    d.textContent = `${x.name} – ${x.village} (${x.voterId})`;
+    d.innerHTML = `
+      <strong>সিরিয়াল নং: ${x.serial}</strong>
+      নাম: ${x.name}<br>
+      গ্রাম: ${x.village}<br>
+      ভোটার আইডি: ${x.voterId}
+    `;
     d.onclick = () => {
       localStorage.setItem('printVoter', JSON.stringify(x));
       location = 'print.html';
