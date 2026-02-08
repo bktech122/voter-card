@@ -1,84 +1,96 @@
-<!-- index.html -->
 <!doctype html>
 <html lang="bn">
 <head>
-<meta charset="utf-8">
-<title>Voter Search</title>
-<link rel="stylesheet" href="common.css">
-<script src="voters.js"></script>
-<script src="unionVillageMap.js"></script>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Voter Search</title>
+
+  <link rel="stylesheet" href="common.css">
+  <script src="voters.js"></script>
+  <script src="unionVillageMap.js"></script>
 </head>
 <body>
 
-<div class="header"><img src="assets/banner.jpg"></div>
+  <div class="header">
+    <img src="assets/banner.jpg" alt="Banner">
+  </div>
 
-<div class="container">
-  <input value="জেলা: ঝিনাইদহ" disabled>
-  <input value="উপজেলা: কালীগঞ্জ" disabled>
+  <div class="container">
+    <input value="জেলা: ঝিনাইদহ" disabled>
+    <input value="উপজেলা: কালীগঞ্জ" disabled>
 
-  <select id="union">
-    <option value="">ইউনিয়ন নির্বাচন করুন</option>
-    <option>সুন্দরপুর-দূর্গাপুর</option>
-    <option>জামাল</option>
-    <option>কোলা</option>
-    <option>নিয়ামতপুর</option>
-    <option>শিমলা-রোকনপুর</option>
-    <option>ত্রিলোচনপুর</option>
-    <option>রায়গ্রাম</option>
-    <option>মালিয়াট</option>
-    <option>বারবাজার</option>
-    <option>কাষ্টভাঙ্গা</option>
-  </select>
+    <select id="union">
+      <option value="">ইউনিয়ন নির্বাচন করুন</option>
+      <option>সুন্দরপুর-দূর্গাপুর</option>
+      <option>জামাল</option>
+      <option>কোলা</option>
+      <option>নিয়ামতপুর</option>
+      <option>শিমলা-রোকনপুর</option>
+      <option>ত্রিলোচনপুর</option>
+      <option>রায়গ্রাম</option>
+      <option>মালিয়াট</option>
+      <option>বারবাজার</option>
+      <option>কাষ্টভাঙ্গা</option>
+    </select>
 
-  <select id="village" disabled>
-    <option value="">গ্রাম নির্বাচন করুন</option>
-  </select>
+    <select id="village" disabled>
+      <option value="">গ্রাম নির্বাচন করুন</option>
+    </select>
 
-  <input id="search" placeholder="নাম বা ভোটার আইডি লিখুন">
-  <div id="results"></div>
-</div>
+    <input id="search" placeholder="নাম বা ভোটার আইডি লিখুন">
 
-<div class="footer"></div>
+    <button id="searchBtn">সার্চ করুন</button>
+
+    <div id="results"></div>
+  </div>
+
+  <div class="footer"></div>
 
 <script>
-const u=document.getElementById('union');
-const v=document.getElementById('village');
-const s=document.getElementById('search');
-const r=document.getElementById('results');
+const u = document.getElementById('union');
+const v = document.getElementById('village');
+const s = document.getElementById('search');
+const r = document.getElementById('results');
+const btn = document.getElementById('searchBtn');
 
-u.onchange=()=>{
-  v.innerHTML='<option value="">গ্রাম নির্বাচন করুন</option>';
-  v.disabled=true;
-  if(unionVillageMap[u.value]){
-    unionVillageMap[u.value].forEach(x=>{
-      const o=document.createElement('option');
-      o.value=x;o.textContent=x;
+u.onchange = () => {
+  v.innerHTML = '<option value="">গ্রাম নির্বাচন করুন</option>';
+  v.disabled = true;
+
+  if (unionVillageMap[u.value]) {
+    unionVillageMap[u.value].forEach(x => {
+      const o = document.createElement('option');
+      o.value = x;
+      o.textContent = x;
       v.appendChild(o);
     });
-    v.disabled=false;
+    v.disabled = false;
   }
-  draw();
 };
-v.onchange=draw;
-s.oninput=draw;
 
-function draw(){
-  r.innerHTML='';
-  voters.filter(x=>{
-    return (!u.value||x.union===u.value)
-      &&(!v.value||x.village===v.value)
-      &&(!s.value||x.name.includes(s.value)||x.voterId.includes(s.value));
-  }).forEach(x=>{
-    const d=document.createElement('div');
-    d.className='result';
-    d.textContent=`${x.name} – ${x.village} (${x.voterId})`;
-    d.onclick=()=>{
-      localStorage.setItem('printVoter',JSON.stringify(x));
-      location='print.html';
+v.onchange = draw;
+s.oninput = draw;
+btn.onclick = draw;
+
+function draw() {
+  r.innerHTML = '';
+
+  voters.filter(x => {
+    return (!u.value || x.union === u.value)
+      && (!v.value || x.village === v.value)
+      && (!s.value || x.name.includes(s.value) || x.voterId.includes(s.value));
+  }).forEach(x => {
+    const d = document.createElement('div');
+    d.className = 'result';
+    d.textContent = `${x.name} – ${x.village} (${x.voterId})`;
+    d.onclick = () => {
+      localStorage.setItem('printVoter', JSON.stringify(x));
+      location = 'print.html';
     };
     r.appendChild(d);
   });
 }
 </script>
+
 </body>
 </html>
