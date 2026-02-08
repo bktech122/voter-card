@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+<meta charset="UTF-8">
+<title>ভোটার সার্চ</title>
+<link rel="stylesheet" href="common.css">
+<script src="voters.js"></script>
+</head>
+
+<body>
+
+<!-- HEADER -->
+<div class="header">
+  <img src="assets/banner.jpg" alt="Banner">
+</div>
+
+<!-- SEARCH AREA -->
+<div style="padding:15px; margin-bottom:80px;">
+  <input id="search" placeholder="নাম বা ভোটার আইডি লিখুন"
+         style="width:100%; padding:10px; margin-bottom:10px;">
+
+  <select id="area" style="width:100%; padding:10px;">
+    <option value="">সব এরিয়া</option>
+    <option value="ঝিনাইদহ-৪">ঝিনাইদহ–৪</option>
+  </select>
+
+  <div id="results" style="margin-top:15px;"></div>
+</div>
+
+<!-- FOOTER -->
+<div class="footer-menu">
+  <a href="index.html">🔍 সার্চ</a>
+</div>
+
+<script>
+const search = document.getElementById("search");
+const area = document.getElementById("area");
+const results = document.getElementById("results");
+
+function render(){
+  results.innerHTML = "";
+  voters.filter(v =>
+    (v.name.includes(search.value) || v.voterId.includes(search.value)) &&
+    (area.value === "" || v.area === area.value)
+  ).forEach(v=>{
+    const div = document.createElement("div");
+    div.style.border = "1px solid #ccc";
+    div.style.padding = "10px";
+    div.style.marginBottom = "8px";
+    div.style.cursor = "pointer";
+    div.innerText = v.name + " (" + v.voterId + ")";
+    div.onclick = () => {
+      localStorage.setItem("printVoter", JSON.stringify(v));
+      window.location = "print.html";
+    };
+    results.appendChild(div);
+  });
+}
+
+search.oninput = render;
+area.onchange = render;
+</script>
+
+</body>
+</html>
